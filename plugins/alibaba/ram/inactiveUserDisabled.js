@@ -40,7 +40,7 @@ module.exports = {
             if (getUser.err || !getUser.data) {
                 helpers.addResult(results, 3,
                     'Unable to query RAM user' + helpers.addError(getUser), region);
-                return callback(null, results, source);
+                continue;
             }
 
             let lastLoginDate = (getUser.data.LastLoginDate && getUser.data.LastLoginDate.length) ? getUser.data.LastLoginDate:getUser.data.CreateDate ;
