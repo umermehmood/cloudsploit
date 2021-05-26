@@ -46,7 +46,7 @@ describe('passwordNoReuse', function () {
             passwordNoReuse.run(cache, {}, (err, results) => {
                 expect(results.length).to.equal(1);
                 expect(results[0].status).to.equal(2);
-                expect(results[0].message).to.include('RAM password security policy does not requires to prevent reusing 5 previous passwords');
+                expect(results[0].message).to.include('RAM password security policy does not require to prevent reusing 5 previous passwords');
                 expect(results[0].region).to.equal('cn-hangzhou');
                 done();
             });
