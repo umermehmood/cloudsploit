@@ -1,17 +1,14 @@
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'Password Minimum Length',
+    title: 'Password Block Logon',
     category: 'RAM',
-    description: 'Ensure that RAM password security settings require minimum length of 14 or above.',
+    description: 'Ensure that RAM password security settings require logon to be blocked after maximum of 5 incorrect login attempts.',
     more_info: 'A strong password policy enforces minimum length, expiration, reuse, and symbol usage.',
     link: 'https://www.alibabacloud.com/help/doc-detail/116413.htm',
-    recommended_action: 'Update the password security settings to require the minimum length of 14 or above.',
+    recommended_action: 'Update the password security settings to require logon to be blocked after maximum of 5 or less incorrect login attempts.',
     apis: ['RAM:GetPasswordPolicy'],
-    compliance: {
-        pci: 'PCI requires a strong password policy. Setting Identity password ' +
-             'requirements enforces this policy.'
-    },
+
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -28,12 +25,12 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        if (getPasswordPolicy.data.MinimumPasswordLength >= 14) {
+        if (getPasswordPolicy.data.MaxLoginAttemps > 0 && getPasswordPolicy.data.MaxLoginAttemps <= 5) {
             helpers.addResult(results, 0,
-                'RAM password security policy require minimum length of 14', region);
+                'RAM password security policy requires logon to be blocked after 5 attempts', region);
         } else {
             helpers.addResult(results, 2,
-                'RAM password security policy does not require minimum length of 14', region);
+                'RAM password security policy does not require logon to be blocked after 5 attempts', region);
         }
 
         callback(null, results, source);
