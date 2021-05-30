@@ -1,14 +1,17 @@
 var helpers = require('../../../helpers/alibaba');
 
 module.exports = {
-    title: 'Password No Reuse',
+    title: 'Password Requires Lowercase',
     category: 'RAM',
-    description: 'Ensure that RAM password security settings are set to prevent reusing 5 old passwords.',
+    description: 'Ensure that RAM password security settings require at least one lowercase character.',
     more_info: 'A strong password policy enforces minimum length, expiration, reuse, and symbol usage.',
     link: 'https://www.alibabacloud.com/help/doc-detail/116413.htm',
-    recommended_action: 'Update the password security settings to prevent reusing 5 old passwords.',
+    recommended_action: 'Update the password security settings to require the use of lowercase characters.',
     apis: ['RAM:GetPasswordPolicy'],
-
+    compliance: {
+        pci: 'PCI requires a strong password policy. Setting Identity password ' +
+             'requirements enforces this policy.'
+    },
     run: function(cache, settings, callback) {
         var results = [];
         var source = {};
@@ -25,12 +28,12 @@ module.exports = {
             return callback(null, results, source);
         }
 
-        if (getPasswordPolicy.data.PasswordReusePrevention >= 5) {
+        if (getPasswordPolicy.data.RequireLowercaseCharacters) {
             helpers.addResult(results, 0,
-                'RAM password security policy requires to prevent reusing previous 5 or more passwords', region);
+                'RAM password security policy requires lowercase characters', region);
         } else {
             helpers.addResult(results, 2,
-                'RAM password security policy does not require to prevent reusing previous 5 passwords', region);
+                'RAM password security policy does not require lowercase characters', region);
         }
 
         callback(null, results, source);
